@@ -20,6 +20,8 @@ from distortion      import calculaDistorsioMalla
 # Plot initial mesh configuration
 plotMesh(X,'Initial mesh')
 
+print('Something')
+
 res = calculaDistorsioMalla(X, T)
 print('Distorsio inicial: ',res)
 
