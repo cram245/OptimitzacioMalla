@@ -5,7 +5,7 @@ A = np.array([[1, -np.sqrt(3.) / 3], [0, 2 * np.sqrt(3.) / 3]],dtype=float)
 
 def calculaDistorsioTriangle(Xe):
 
-    DPhi = [Xe[1] - Xe[0], Xe[2] - Xe[0]] * A
+    DPhi = np.array([Xe[1,:] - Xe[0,:], Xe[2,:] - Xe[0,:]]).T @ A
 
     return np.linalg.norm(DPhi, 'fro') ** 2 / (2 * np.abs(np.linalg.det(DPhi)))
 

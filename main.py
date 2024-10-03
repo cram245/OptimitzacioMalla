@@ -22,7 +22,6 @@ plotMesh(X,'Initial mesh')
 
 res = calculaDistorsioMalla(X, T)
 print('Distorsio inicial: ',res)
-print(lambda x: calculaDistorsioMalla(dofsToCoords(x), T))
 
 def calculaResidu(y, T):
     # Convertir el vector y a coordenadas de los vértices interiores
