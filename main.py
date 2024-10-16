@@ -17,7 +17,7 @@ from distortion      import calculaDistorsioMalla
 #
 #------------------------------------------------------------------------------
 
-# Plot initial mesh configuration
+
 plotMesh(X,'Initial mesh')
 
 res = calculaDistorsioMalla(X, T)
@@ -27,7 +27,6 @@ def calculaResidu(y, T):
     # Convertir el vector y a coordenadas de los vértices interiores
     X = dofsToCoords(y)
     
-    # Calcular el residuo como el gradiente de la distorsión
     residu = derivadaNumerica(lambda x: calculaDistorsioMalla(dofsToCoords(x), T), y)
     
     return residu
@@ -55,15 +54,15 @@ def newtonRaphson(y0, T, tol=5e-8, max_iter=100):
             print('Jacobiana 0,0: ', jacobiana[0][0])
 
         delta_y = np.linalg.solve(jacobiana, -residu)
-        errors.append(np.log10(np.linalg.norm(-delta_y)/np.linalg.norm(y + delta_y)))
+        errors.append(np.linalg.norm(-delta_y)/np.linalg.norm(y + delta_y))
         y = y + delta_y
         
     print('No se alcanzó la convergencia')
-    return y, errors
+    return y, np.array(errors)
 
 y = coordsToDofs(X)  # Convertir las coordenadas iniciales a vector de incógnitas
 y_opt, errors = newtonRaphson(y, T)
-plt.plot(errors)
+plt.plot(np.log(errors))
 plt.title('Gràfica de Convergència')
 plt.xlabel('Iteració')
 plt.ylabel('Log(Error)')
@@ -72,13 +71,17 @@ plt.grid(True)
 plt.show()
 
 
-# Convert you vector with the dofs back to mesh coordinates
 X = dofsToCoords(y_opt)
-print(calculaDistorsioMalla(X, T))
+
+print('Distorsió final: ', calculaDistorsioMalla(X, T))
+
+X = dofsToCoords(y_opt)
+print('Posició del primer node: ', X[0])
 
 plotMesh(X, 'Solució')
 X = dofsToCoords(np.ones(y_opt.shape))
 
-
-    
-
+print('ratios:')
+for i in range(len(errors)):
+    if i > 0:
+        print(f'iteracio {i} : ', np.log(errors[i])/np.log(errors[i -1]))
